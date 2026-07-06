@@ -2,6 +2,8 @@ server:
   port: 8081
 
 spring:
+  application:
+     name: auth-service
   datasource:
     url: jdbc:mysql://localhost:3307/farm_management
     username: root
@@ -12,6 +14,15 @@ spring:
       ddl-auto: update
 
     show-sql: true
+    
+    properties:
+      hibernate:
+        format_sql: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+      
 
 jwt:
   secret: MyVerySecretKeyForJwtTokenGeneration
