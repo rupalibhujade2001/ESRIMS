@@ -1,0 +1,29 @@
+server:
+  port: 8081
+
+spring:
+  application:
+     name: auth-service
+  datasource:
+    url: jdbc:mysql://localhost:3307/farm_management
+    username: root
+    password: Kadam@1999
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+    
+    properties:
+      hibernate:
+        format_sql: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+      
+
+jwt:
+  secret: 4e7f8c9d2a1b6e5f7d8c9a0b1c2d3e4f5a6b7c8d9e0f123456789abcdef1234
+  expiration: 3600000
