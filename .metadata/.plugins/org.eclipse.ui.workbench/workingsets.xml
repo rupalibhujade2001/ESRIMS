@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workingSetManager>
+<workingSet editPageId="org.eclipse.jdt.internal.ui.DynamicSourcesWorkingSet" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1780122390019_0" label="Java Main Sources" name="Java Main Sources"/>
+<workingSet editPageId="org.eclipse.jdt.internal.ui.DynamicSourcesWorkingSet" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1780122390055_1" label="Java Test Sources" name="Java Test Sources"/>
+<workingSet editPageId="org.eclipse.ui.resourceWorkingSetPage" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1780143382494_3" label="ecommerce-microservices" name="ecommerce-microservices">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/ecommerce-microservices" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/common-library" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/service-registry" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/api-gateway" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/order-service" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/inventory-service" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/payment-service" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/notification-service" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/shipping-service" type="4"/>
+</workingSet>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1780122392044_2" label="Window Working Set" name="Aggregate for window 1780122392044"/>
+</workingSetManager>
