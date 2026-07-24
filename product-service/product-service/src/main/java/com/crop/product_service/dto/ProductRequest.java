@@ -28,4 +28,7 @@ public class ProductRequest {
     private String imageUrl;
 
     private Double offerPercentage;
+    
+    @NotNull
+    private Long quantity;
 }

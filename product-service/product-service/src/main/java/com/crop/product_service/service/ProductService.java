@@ -29,4 +29,6 @@ public interface ProductService {
 
 	public boolean deleteProduct(@Valid Long id);
 
+	public List<ProductResponse>  getMyProductsByEmail(String email);
+
 }

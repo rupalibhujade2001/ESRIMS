@@ -6,18 +6,23 @@ import java.util.Optional;
 
 import javax.management.relation.RelationNotFoundException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.crop.product_service.dto.InventoryCreateRequest;
+import com.crop.product_service.dto.InventoryCreateResponse;
 import com.crop.product_service.dto.ProductRequest;
 import com.crop.product_service.dto.ProductResponse;
 import com.crop.product_service.dto.UserDetailsResponse;
 import com.crop.product_service.entity.Product;
 import com.crop.product_service.repository.ProductRepository;
 import com.crop.product_service.service.AuthClient;
+import com.crop.product_service.service.InvenotryClient;
 import com.crop.product_service.service.ProductService;
+import com.crop.product_service.service.exception.ProductFoundException;
 import com.crop.product_service.service.exception.ResourceNotFoundException;
 
 import jakarta.validation.Valid;
@@ -28,12 +33,13 @@ import lombok.RequiredArgsConstructor;
 public class ProductServiceImpl implements ProductService {
 
 	public final ProductRepository productRepository;
-	
+
 	private final AuthClient authClient;
 
+	private final InvenotryClient invenotryClient;
 
 	@Override
-	public ProductResponse createProduct(ProductRequest request) {
+	public ProductResponse createProduct(ProductRequest request) throws RuntimeException {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Product product = new Product();
@@ -44,8 +50,19 @@ public class ProductServiceImpl implements ProductService {
 				.offerPercentage(request.getOfferPercentage()).updateAt(product.getUpdateAt()).build();
 		if (!productRepository.existsByNameIgnoreCase(request.getName())) {
 			Product saveProduct = productRepository.save(product);
-			return MapToResponse(saveProduct);
+			try {
+				InventoryCreateRequest invenotryrequest = new InventoryCreateRequest(saveProduct.getId(),
+						request.getQuantity());
+				InventoryCreateResponse a = invenotryClient.createInventory(invenotryrequest);
+				return MapToResponse(saveProduct);
+			} catch (RuntimeException e) {
+				if (saveProduct != null) {
+					productRepository.deleteById(saveProduct.getId());
+				}
+			}
 
+		} else {
+			throw new ProductFoundException("Product already exists", HttpStatus.FOUND);
 		}
 		return null;
 
@@ -76,8 +93,8 @@ public class ProductServiceImpl implements ProductService {
 
 		Optional<Product> product = Optional.of(
 				productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Prouct not found")));
-		UserDetailsResponse farmer=authClient.getUserDetailsByFarmerEmail(product.get().getEmail());
-		System.out.println("Feign clin=ent response"+farmer.getEmail()+farmer.getName()+farmer.getPhone());
+		UserDetailsResponse farmer = authClient.getUserDetailsByFarmerEmail(product.get().getEmail());
+		System.out.println("Feign clin=ent response" + farmer.getEmail() + farmer.getName() + farmer.getPhone());
 
 		return MapToResponse(product.get());
 	}
@@ -130,7 +147,6 @@ public class ProductServiceImpl implements ProductService {
 						.email(authentication.getName()).offerPercentage(request.getOfferPercentage())
 						.updateAt(product.getUpdateAt()).id(product.getId()).build();
 
-				
 				return MapToResponse(productRepository.save(product));
 			} else {
 				throw new RuntimeException("You are not authorized to update this product");
@@ -145,16 +161,29 @@ public class ProductServiceImpl implements ProductService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Optional<Product> product = productRepository.findById(id);
 		System.out.println("inside deleteProduct");
-		if(!product.isEmpty()) {
+		if (!product.isEmpty()) {
 			System.out.println("inside deleteProduct if");
-			if(authentication.getName().equalsIgnoreCase(product.get().getEmail())) {
-				  productRepository.deleteById(id);
-					System.out.println("inside deleteProduct if true");
-				  return true;
+			if (authentication.getName().equalsIgnoreCase(product.get().getEmail())) {
+				productRepository.deleteById(id);
+				System.out.println("inside deleteProduct if true");
+				return true;
 			}
 		}
 		System.out.println("inside deleteProduct if false");
 		return false;
+	}
+
+	@Override
+	public List<ProductResponse> getMyProductsByEmail(String email) {
+		// TODO Auto-generated method stub
+		List<Product> myProducts = productRepository.findByEmail(email);
+		if (myProducts != null) {
+			return myProducts.stream().map(this::MapToResponse).toList();
+		}
+
+		throw new ResourceNotFoundException("Prouct not found");
+
+		
 	}
 
 }

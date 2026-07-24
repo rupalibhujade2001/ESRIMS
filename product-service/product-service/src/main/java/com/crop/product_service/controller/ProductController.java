@@ -56,6 +56,13 @@ public class ProductController {
 		return ResponseEntity.ok(prodcutService.searchProductByName(name));
 
 	}
+	
+	@GetMapping("farmerProdcut/{email}")
+	public ResponseEntity<List<ProductResponse>> getProductByEmail(@PathVariable String email){
+	System.out.println(email);
+	return ResponseEntity.ok(prodcutService.getMyProductsByEmail(email));
+		
+	}
 
 	@GetMapping("/me")
 	public ResponseEntity<List<ProductResponse>> myProducts() {
