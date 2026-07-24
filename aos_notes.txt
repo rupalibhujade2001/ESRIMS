@@ -1,0 +1,79 @@
+Here is a simple and clear illustration of the UNIX file system calls open, read, write, create, close in Advanced Operating System:
+
+⭐ 1. open() System Call
+📌 What it does
+
+Opens an existing file so a process can use it.
+
+📌 What it returns
+
+A file descriptor (a small integer used to access the file).
+
+📝 Example
+
+fd = open("data.txt", O_RDONLY);
+→ Opens data.txt in read-only mode.
+
+⭐ 2. read() System Call
+📌 What it does
+
+Reads data from a file into memory.
+
+📌 Things needed
+
+File descriptor
+
+Buffer (where data will be stored)
+
+Number of bytes to read
+
+📝 Example
+
+read(fd, buffer, 100);
+→ Reads 100 bytes from the file into buffer.
+
+⭐ 3. write() System Call
+📌 What it does
+
+Writes data from memory to a file.
+
+📌 Things needed
+
+File descriptor
+
+Data buffer
+
+Number of bytes to write
+
+📝 Example
+
+write(fd, "Hello", 5);
+→ Writes “Hello” into the file.
+
+⭐ 4. create() System Call
+📌 What it does
+
+Creates a new file in the file system.
+
+📝 Example
+
+create("newfile.txt", 0644);
+→ Creates newfile.txt with permission 644.
+
+(Note: In modern UNIX, creat() is used, spelled without "e".)
+
+⭐ 5. close() System Call
+📌 What it does
+
+Closes an open file so the OS can free resources.
+
+📌 Why needed?
+
+Prevents file descriptor leakage.
+
+Ensures data is saved properly.
+
+📝 Example
+
+close(fd);
+→ Closes the file.
