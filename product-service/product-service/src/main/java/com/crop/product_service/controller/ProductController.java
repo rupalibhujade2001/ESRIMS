@@ -2,6 +2,7 @@ package com.crop.product_service.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.crop.product_service.dto.ProductRequest;
 import com.crop.product_service.dto.ProductResponse;
+import com.crop.product_service.dto.ProductSearchRequest;
 import com.crop.product_service.service.ProductService;
 
 import jakarta.validation.Valid;
@@ -79,6 +81,19 @@ public class ProductController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Boolean> deleteProduct(@Valid @PathVariable Long id, @RequestBody ProductRequest request){
 	return ResponseEntity.ok(prodcutService.deleteProduct(id));	
+	}
+	
+	@GetMapping("/searchdynamic")
+	public ResponseEntity<Page<ProductResponse>> searchProductDynamically(ProductSearchRequest productRequest)
+	{
+		return ResponseEntity.ok(prodcutService.searchProducts(productRequest));
+		
+	}
+	
+	@GetMapping("/filter")
+	public ResponseEntity<List<Long>> filterProductIds(ProductRequest request){
+		return ResponseEntity.ok(prodcutService.filterProducts(request));
+		
 	}
 
 }

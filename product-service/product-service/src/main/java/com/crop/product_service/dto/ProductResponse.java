@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 //import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 
+
+@Builder
 public record ProductResponse(Long id,
 
 		String email,
