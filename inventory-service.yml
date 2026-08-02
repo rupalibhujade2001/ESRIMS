@@ -17,9 +17,13 @@ spring:
        port: 6379
   kafka:
     bootstrap-servers: localhost:9092
-    producer:
+    consumer:
+      group-id: inventory-group
+      auto-offset-reset: earliest
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.trusted.packages: "*"
 
 eureka:
    client:
