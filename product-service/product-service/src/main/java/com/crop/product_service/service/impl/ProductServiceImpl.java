@@ -6,6 +6,12 @@ import java.util.Optional;
 
 import javax.management.relation.RelationNotFoundException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,6 +22,7 @@ import com.crop.product_service.dto.InventoryCreateRequest;
 import com.crop.product_service.dto.InventoryCreateResponse;
 import com.crop.product_service.dto.ProductRequest;
 import com.crop.product_service.dto.ProductResponse;
+import com.crop.product_service.dto.ProductSearchRequest;
 import com.crop.product_service.dto.UserDetailsResponse;
 import com.crop.product_service.entity.Product;
 import com.crop.product_service.repository.ProductRepository;
@@ -24,6 +31,7 @@ import com.crop.product_service.service.InvenotryClient;
 import com.crop.product_service.service.ProductService;
 import com.crop.product_service.service.exception.ProductFoundException;
 import com.crop.product_service.service.exception.ResourceNotFoundException;
+import com.crop.product_service.specification.ProductSpecification;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +64,7 @@ public class ProductServiceImpl implements ProductService {
 				InventoryCreateResponse a = invenotryClient.createInventory(invenotryrequest);
 				return MapToResponse(saveProduct);
 			} catch (RuntimeException e) {
+				e.printStackTrace();
 				if (saveProduct != null) {
 					productRepository.deleteById(saveProduct.getId());
 				}
@@ -183,7 +192,42 @@ public class ProductServiceImpl implements ProductService {
 
 		throw new ResourceNotFoundException("Prouct not found");
 
-		
+	}
+
+	@Override
+	public Page<ProductResponse> searchProducts(ProductSearchRequest request) {
+
+		Specification<Product> specification = Specification.where(null);
+
+		specification = specification.and(ProductSpecification.hasName(request.getName()));
+		specification = specification.and(ProductSpecification.hasCategory(request.getCategory()));
+
+		Sort sort = Sort.by(Sort.Direction.fromString(request.getDirection()), request.getSortBy());
+
+		Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+
+		Page<Product> products = productRepository.findAll(specification, pageable);
+
+		List<ProductResponse> response = products.getContent().stream().map(this::productSearchResponse).toList();
+
+		return new PageImpl<>(response, pageable, products.getTotalElements());
+	}
+
+	private ProductResponse productSearchResponse(Product product) {
+
+		return ProductResponse.builder().id(product.getId()).category(product.getCategory()).email(product.getEmail())
+				.createdAt(product.getCreatedAt()).name(product.getName()).imageUrl(product.getImageUrl())
+				.offerPercentage(product.getOfferPercentage()).price(product.getPrice()).build();
+
+	}
+
+	@Override
+	public List<Long> filterProducts(ProductRequest request) {
+    Specification<Product> specification=Specification.where(null);
+    specification=specification.and(ProductSpecification.hasName(request.getName()));
+    specification=specification.and(ProductSpecification.hasCategory(request.getCategory()));
+    return productRepository.findProductIds(request.getName(), request.getCategory());
+   
 	}
 
 }

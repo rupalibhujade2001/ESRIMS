@@ -10,7 +10,7 @@ import com.crop.product_service.dto.InventoryCreateResponse;
 @FeignClient(name="INVENTORY-SERVICE")
 public interface InvenotryClient {
 	
-	@PostMapping("/inventory")
+	@PostMapping("/inventory/createInventory")
 	public InventoryCreateResponse createInventory(@RequestBody InventoryCreateRequest request);
 
 }

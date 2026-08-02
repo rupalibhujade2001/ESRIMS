@@ -1,0 +1,184 @@
+-------------------------------------------------------------------
+Sprint 1 : Foundation & Security
+-------------------------------------------------------------------
+
+Goal:
+Set up the microservices infrastructure and authentication layer.
+
+User Stories:
+
+- Config Server
+- Eureka Discovery Server
+- API Gateway
+- Auth Service
+- JWT Authentication
+- Role Based Authorization
+- Global Exception Handling
+- Centralized Logging
+- Dockerize Infrastructure Services
+
+
+-------------------------------------------------------------------
+Sprint 2 : Product Service + Inventory Service
+-------------------------------------------------------------------
+
+Goal:
+Build farmer product management and inventory management modules.
+
+Product Service:
+
+- Product CRUD
+- Product Search APIs
+- Product Pagination & Sorting
+- Product Filtering APIs
+- Product Dashboard APIs
+
+Inventory Service:
+
+US-I1 - Inventory CRUD
+US-I2 - Stock Management
+US-I3 - Inventory Dashboard Analytics
+US-I4 - Redis Cache Integration
+US-I5 - Inventory Search APIs
+US-I6 - Pagination & Sorting
+US-I7 - Global Search & Filtering
+US-I8 - Kafka Events
+
+(US-I9 moved out of this sprint)
+
+
+-------------------------------------------------------------------
+Sprint 3 : Supplier Service + Order Service
+-------------------------------------------------------------------
+
+Goal:
+Implement supplier onboarding and order management.
+
+Supplier Service:
+
+- Supplier Registration
+- Supplier CRUD APIs
+- Supplier Search APIs
+
+Order Service:
+
+- Create Order
+- Cancel Order
+- Update Order Status
+- Order Tracking APIs
+- Order Dashboard APIs
+- Redis Cache (if required)
+
+
+-------------------------------------------------------------------
+Sprint 4 : Payment Service + Notification Service
+-------------------------------------------------------------------
+
+Goal:
+Implement payment workflows and event-driven notifications.
+
+Payment Service:
+
+- Payment Initiation
+- Payment Status Tracking
+- Refund APIs
+
+Notification Service:
+
+- Email Notifications
+- Kafka Integration
+- Order Notifications
+- Payment Notifications
+- Inventory Notifications
+
+
+-------------------------------------------------------------------
+Sprint 5 : React Frontend + Authentication
+-------------------------------------------------------------------
+
+Goal:
+Build the complete frontend application.
+
+Modules:
+
+- Login & Registration
+- Dashboard
+- Product Management
+- Inventory Management
+- Supplier Management
+- Order Management
+- Payment Module
+- Protected Routes
+- JWT Handling
+- Role Based UI
+
+
+-------------------------------------------------------------------
+Sprint 6 : Analytics Dashboard
+-------------------------------------------------------------------
+
+Goal:
+Build advanced dashboard APIs using Java 17 features.
+
+Features:
+
+- Heavy Stream API usage
+- Dashboard Aggregations
+- Revenue Analytics
+- Inventory Analytics
+- Supplier Analytics
+- Order Analytics
+- Performance Metrics
+- Export APIs
+- Graph-ready DTOs
+
+Technologies:
+
+- Java Streams
+- Optional
+- Records
+- Collectors
+- Grouping APIs
+- Parallel Streams (if required)
+
+
+-------------------------------------------------------------------
+Sprint 7 : Docker, Testing & Performance Tuning
+-------------------------------------------------------------------
+
+Goal:
+Productionize the application.
+
+Features:
+
+- Docker Compose
+- Containerization
+- Integration Testing
+- API Testing
+- Performance Testing
+- Redis Optimization
+- Kafka Optimization
+- Security Review
+- Logging Improvements
+- Final Deployment Setup
+
+
+-------------------------------------------------------------------
+Future Sprint (Optional)
+-------------------------------------------------------------------
+
+Sprint 8 : Python Analytics & Machine Learning
+
+Goal:
+Introduce Python-based analytics services.
+
+Features:
+
+- FastAPI Integration
+- Stock Prediction
+- Demand Forecasting
+- Farmer Recommendation Engine
+- Data Visualization APIs
+- ML Models
+- Inventory Trend Analysis
+- AI-based Insights

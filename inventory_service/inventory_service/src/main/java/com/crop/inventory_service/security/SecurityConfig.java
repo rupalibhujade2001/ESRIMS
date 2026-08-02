@@ -24,10 +24,9 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/auth/register").permitAll()
-						.requestMatchers("/inventory/**","/inventory").hasAnyRole("FARMER","ADMIN").requestMatchers("/inventory/dashboard").hasAuthority("ADMIN")
-						.requestMatchers("/inventory/dashboard/**").hasAuthority("ADMIN").anyRequest().authenticated());
-//http.csrf(csrf -> csrf.disable())
-//.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+						.requestMatchers("/inventory/**","/inventory").hasAnyRole("ADMIN","FARMER").requestMatchers("/inventory/dashboard").hasAuthority("ADMIN")
+						.requestMatchers("/inventory/dashboard/**").hasAnyRole("ADMIN").anyRequest().authenticated());
+
 		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}

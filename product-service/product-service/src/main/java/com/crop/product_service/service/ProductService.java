@@ -2,10 +2,12 @@ package com.crop.product_service.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 import com.crop.product_service.dto.ProductRequest;
 import com.crop.product_service.dto.ProductResponse;
+import com.crop.product_service.dto.ProductSearchRequest;
 
 import jakarta.validation.Valid;
 
@@ -30,5 +32,9 @@ public interface ProductService {
 	public boolean deleteProduct(@Valid Long id);
 
 	public List<ProductResponse>  getMyProductsByEmail(String email);
+	
+	Page<ProductResponse> searchProducts(ProductSearchRequest request);
+
+	public List<Long> filterProducts(ProductRequest request);
 
 }
