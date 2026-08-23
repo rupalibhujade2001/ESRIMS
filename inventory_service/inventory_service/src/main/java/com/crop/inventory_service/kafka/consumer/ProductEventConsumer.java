@@ -21,6 +21,7 @@ public class ProductEventConsumer {
 	@KafkaListener(topics="product-created", groupId="inventory-group")
 	public void consume(ProductCreatedEvent event)  {
 			inventoryService.createInventoryForProduct(event);
+			System.out.println("Kafka event is consumed");
 		
 	}
 
