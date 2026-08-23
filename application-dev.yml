@@ -1,9 +1,0 @@
-logging:
-  level:
-    root: DEBUG
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"

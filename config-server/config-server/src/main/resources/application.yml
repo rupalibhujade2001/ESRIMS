@@ -9,6 +9,6 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/rupalibhujade2001/ESRIMS.git
+          uri: https://github.com/rupalibhujade2001/ESRIMS-config.git
           default-label: main
           clone-on-start: true
