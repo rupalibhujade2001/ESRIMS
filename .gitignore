@@ -1,0 +1,2 @@
+# Separate Spring Cloud Config repository; managed and committed independently.
+config-repository/
