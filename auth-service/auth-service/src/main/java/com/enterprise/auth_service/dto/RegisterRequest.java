@@ -32,4 +32,9 @@ public class RegisterRequest {
     
     @NotBlank(message = "farmer Name is required")
     private String farmerName;
+    
+    
+    private Role role;
+    
+    
 }	

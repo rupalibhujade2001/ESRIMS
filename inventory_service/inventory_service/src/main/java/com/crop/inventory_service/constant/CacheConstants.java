@@ -8,6 +8,9 @@ public final class CacheConstants {
     public static final String LOW_STOCK =
             "low-stock-cache";
 
+    public static final String INVENTORY_DASHBOARD =
+            "inventory-dashboard-cache";
+
     private CacheConstants() {
     }
 

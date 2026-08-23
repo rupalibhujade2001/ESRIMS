@@ -1,19 +1,15 @@
 package com.crop.product_service.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import javax.management.relation.RelationNotFoundException;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,6 +21,8 @@ import com.crop.product_service.dto.ProductResponse;
 import com.crop.product_service.dto.ProductSearchRequest;
 import com.crop.product_service.dto.UserDetailsResponse;
 import com.crop.product_service.entity.Product;
+import com.crop.product_service.kafka.Producer.ProductEventProducer;
+import com.crop.product_service.kafka.event.ProductCreatedEvent;
 import com.crop.product_service.repository.ProductRepository;
 import com.crop.product_service.service.AuthClient;
 import com.crop.product_service.service.InvenotryClient;
@@ -34,10 +32,11 @@ import com.crop.product_service.service.exception.ResourceNotFoundException;
 import com.crop.product_service.specification.ProductSpecification;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
 	public final ProductRepository productRepository;
@@ -45,6 +44,8 @@ public class ProductServiceImpl implements ProductService {
 	private final AuthClient authClient;
 
 	private final InvenotryClient invenotryClient;
+	
+	private final ProductEventProducer productEventProducer;
 
 	@Override
 	public ProductResponse createProduct(ProductRequest request) throws RuntimeException {
@@ -58,10 +59,10 @@ public class ProductServiceImpl implements ProductService {
 				.offerPercentage(request.getOfferPercentage()).updateAt(product.getUpdateAt()).build();
 		if (!productRepository.existsByNameIgnoreCase(request.getName())) {
 			Product saveProduct = productRepository.save(product);
+			ProductCreatedEvent productCreatedEvent=ProductCreatedEvent.builder().productId(product.getId()).name(product.getName()).AvailableQuantity(request.getQuantity()).category(product.getCategory()).build();
+			//productEventProducer.publishProductCreatedEvent(productCreatedEvent);
 			try {
-				InventoryCreateRequest invenotryrequest = new InventoryCreateRequest(saveProduct.getId(),
-						request.getQuantity());
-				InventoryCreateResponse a = invenotryClient.createInventory(invenotryrequest);
+				productEventProducer.publishProductCreatedEvent(productCreatedEvent);
 				return MapToResponse(saveProduct);
 			} catch (RuntimeException e) {
 				e.printStackTrace();
@@ -102,8 +103,8 @@ public class ProductServiceImpl implements ProductService {
 
 		Optional<Product> product = Optional.of(
 				productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Prouct not found")));
-		UserDetailsResponse farmer = authClient.getUserDetailsByFarmerEmail(product.get().getEmail());
-		System.out.println("Feign clin=ent response" + farmer.getEmail() + farmer.getName() + farmer.getPhone());
+	//	UserDetailsResponse farmer = authClient.getUserDetailsByFarmerEmail(product.get().getEmail());
+	//	System.out.println("Feign clin=ent response" + farmer.getEmail() + farmer.getName() + farmer.getPhone());
 
 		return MapToResponse(product.get());
 	}

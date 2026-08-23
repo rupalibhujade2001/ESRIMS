@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Frontend Interview Questions</title>
+    <style>
+      :root { --brand: #176b46; --ink: #1f2933; --muted: #52606d; --border: #d9e2ec; --soft: #f0f8f3; --code: #f1f5f9; }
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: #f7f9fb; font: 16px/1.62 Arial, sans-serif; }
+      main { max-width: 1020px; margin: 32px auto; padding: 46px; background: #fff; box-shadow: 0 3px 18px #102a4317; }
+      h1, h2, h3 { color: var(--brand); line-height: 1.25; }
+      h1 { margin: 0 0 6px; font-size: 2.25rem; }
+      h2 { margin-top: 44px; padding-bottom: 9px; border-bottom: 2px solid var(--border); }
+      h3 { margin: 0 0 9px; font-size: 1.1rem; }
+      .subtitle, .muted { color: var(--muted); }
+      .intro { margin: 24px 0; padding: 19px 22px; border-left: 5px solid var(--brand); background: var(--soft); }
+      .item { margin: 19px 0; padding: 20px; border: 1px solid var(--border); border-radius: 8px; break-inside: avoid; }
+      p { margin: 8px 0; }
+      .label { display: block; margin-top: 13px; color: var(--brand); font-size: .84rem; font-weight: bold; letter-spacing: .04em; text-transform: uppercase; }
+      code { padding: 2px 5px; color: #0f5132; background: var(--code); border-radius: 4px; }
+      pre { overflow-x: auto; margin: 10px 0 0; padding: 14px; border-radius: 6px; color: #e6edf3; background: #1f2933; font: 13px/1.5 Consolas, monospace; }
+      ul { margin: 7px 0; padding-left: 23px; }
+      .tip { padding: 18px; background: #fff8df; border-radius: 8px; }
+      @media print { body { background: #fff; } main { max-width: none; margin: 0; padding: 20px; box-shadow: none; } }
+      @media (max-width: 650px) { main { margin: 0; padding: 22px; } h1 { font-size: 1.75rem; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>React &amp; Frontend Interview Questions</h1>
+      <p class="subtitle">General concepts explained simply, with FarmLink examples</p>
+
+      <section class="intro">
+        These are general frontend interview questions, not only project questions. For every concept, relate your answer to the FarmLink marketplace where it helps show practical experience.
+      </section>
+
+      <h2>React Fundamentals</h2>
+
+      <article class="item">
+        <h3>1. What is React?</h3>
+        <p>React is a JavaScript library for building user interfaces from reusable components. It updates the UI efficiently when application data changes.</p>
+        <span class="label">FarmLink example</span>
+        <p>FarmLink is divided into components such as <code>Marketplace</code>, <code>LoginModal</code>, <code>ProductForm</code>, and <code>Inventory</code>. Each component has one clear responsibility.</p>
+      </article>
+
+      <article class="item">
+        <h3>2. What is a component?</h3>
+        <p>A component is an independent, reusable piece of UI. In React, it is usually a JavaScript function that returns JSX.</p>
+        <span class="label">FarmLink example</span>
+        <p><code>LoginModal</code> is a component. It renders email and password fields and calls a parent function after form submission.</p>
+      </article>
+
+      <article class="item">
+        <h3>3. What is JSX?</h3>
+        <p>JSX is syntax that lets developers write HTML-like UI inside JavaScript. React transforms JSX into JavaScript function calls before running it in the browser.</p>
+        <span class="label">FarmLink example</span>
+        <pre>return &lt;button onClick={onLogin}&gt;Log in&lt;/button&gt;</pre>
+        <p>The curly braces allow JavaScript expressions inside JSX.</p>
+      </article>
+
+      <article class="item">
+        <h3>4. What is the difference between props and state?</h3>
+        <p><strong>Props</strong> are inputs passed from a parent component and should not be changed by the child. <strong>State</strong> is data owned and updated by a component; changing it triggers a re-render.</p>
+        <span class="label">FarmLink example</span>
+        <p><code>Marketplace</code> receives <code>products</code>, <code>mode</code>, and callback functions as props. In <code>App.jsx</code>, <code>products</code>, <code>token</code>, and <code>search</code> are state values.</p>
+      </article>
+
+      <article class="item">
+        <h3>5. What does useState do?</h3>
+        <p><code>useState</code> creates state in a functional component. It returns the current value and a setter function. Calling the setter schedules a re-render.</p>
+        <span class="label">FarmLink example</span>
+        <pre>const [search, setSearch] = useState('')</pre>
+        <p>When the user types in the top search field, <code>setSearch</code> updates the value and the marketplace filters again.</p>
+      </article>
+
+      <article class="item">
+        <h3>6. Why should state not be mutated directly?</h3>
+        <p>Direct mutation can make changes hard to track and may prevent React from detecting updates correctly. Instead, create a new array or object and pass it to the setter.</p>
+        <span class="label">FarmLink example</span>
+        <p>When a buyer saves an enquiry, the app creates a new array with <code>[request, ...buyerRequests]</code> and passes it to <code>setBuyerRequests</code>.</p>
+      </article>
+
+      <article class="item">
+        <h3>7. What is a controlled component?</h3>
+        <p>A controlled form element gets its value from React state and changes state through an event handler. React becomes the single source of truth for the input.</p>
+        <span class="label">FarmLink example</span>
+        <p>In <code>LoginModal</code>, the email input uses <code>value={email}</code> and updates it through <code>onChange</code>. The same pattern is used in <code>ProductForm</code>.</p>
+      </article>
+
+      <article class="item">
+        <h3>8. Why are keys important while rendering lists?</h3>
+        <p>Keys give each list item a stable identity. React uses them to efficiently determine which list elements were added, removed, or changed. Keys should be unique and stable.</p>
+        <span class="label">FarmLink example</span>
+        <pre>{products.map((product) =&gt; (
+  &lt;article key={product.id}&gt;{product.name}&lt;/article&gt;
+))}</pre>
+        <p>Using the database product ID is better than using an array index because product order can change.</p>
+      </article>
+
+      <h2>Hooks and Rendering</h2>
+
+      <article class="item">
+        <h3>9. What is useEffect?</h3>
+        <p><code>useEffect</code> runs side effects after rendering. Typical side effects include API requests, subscriptions, timers, and browser storage interactions.</p>
+        <span class="label">FarmLink example</span>
+        <p><code>App.jsx</code> uses an effect to load products when the authentication token changes and another effect to load the inventory dashboard after login.</p>
+      </article>
+
+      <article class="item">
+        <h3>10. What is the dependency array in useEffect?</h3>
+        <p>The dependency array controls when an effect runs. An empty array means once after initial render. Including a value means the effect runs again when that value changes. No dependency array means after every render.</p>
+        <span class="label">FarmLink example</span>
+        <pre>useEffect(() =&gt; { loadProducts(token) }, [token])</pre>
+        <p>The product loading effect runs after initial render and again after login or logout changes the token.</p>
+      </article>
+
+      <article class="item">
+        <h3>11. What is useMemo and when should you use it?</h3>
+        <p><code>useMemo</code> memoizes a calculated value. It is useful for expensive calculations or when a stable derived value helps avoid unnecessary work. It should not be used everywhere without measuring a need.</p>
+        <span class="label">FarmLink example</span>
+        <p>The visible product list is derived using <code>useMemo</code> from the products array and the search text. It only recalculates when either dependency changes.</p>
+      </article>
+
+      <article class="item">
+        <h3>12. What is useCallback?</h3>
+        <p><code>useCallback</code> memoizes a function reference. It can help when passing callbacks to memoized child components, but using it unnecessarily can make code more complex.</p>
+        <span class="label">FarmLink example</span>
+        <p>If product cards were optimized with <code>React.memo</code>, handlers such as <code>onEdit</code> or <code>onDelete</code> could be wrapped with <code>useCallback</code> to avoid changing their references on every parent render.</p>
+      </article>
+
+      <article class="item">
+        <h3>13. What causes a React component to re-render?</h3>
+        <p>A component re-renders when its state changes, when its parent re-renders, or when the context it consumes changes. React then compares the new virtual DOM output with the previous output and updates only necessary DOM elements.</p>
+        <span class="label">FarmLink example</span>
+        <p>Typing a search term changes <code>search</code> state in <code>App.jsx</code>, which re-renders the relevant UI and supplies the filtered product list to <code>Marketplace</code>.</p>
+      </article>
+
+      <article class="item">
+        <h3>14. What is conditional rendering?</h3>
+        <p>Conditional rendering shows different UI based on a condition. In React, this is commonly done using <code>&amp;&amp;</code>, ternary operators, or early returns.</p>
+        <span class="label">FarmLink example</span>
+        <p>The app displays <code>LoginModal</code> only when <code>showLogin</code> is true. The marketplace displays Edit and Delete buttons only for a seller who owns that product.</p>
+      </article>
+
+      <h2>JavaScript and Browser Concepts</h2>
+
+      <article class="item">
+        <h3>15. What is the difference between == and === in JavaScript?</h3>
+        <p><code>==</code> compares values after type coercion, whereas <code>===</code> compares value and type without coercion. In production code, prefer <code>===</code> to avoid unexpected behavior.</p>
+        <span class="label">FarmLink example</span>
+        <p>The code uses strict checks such as <code>role === 'FARMER'</code> and <code>mode === 'seller'</code>.</p>
+      </article>
+
+      <article class="item">
+        <h3>16. What are async and await?</h3>
+        <p><code>async</code> marks a function that returns a Promise. <code>await</code> pauses that function until a Promise resolves or rejects, making asynchronous code easier to read than chained callbacks.</p>
+        <span class="label">FarmLink example</span>
+        <p>The login handler uses <code>await login(credentials)</code>. It waits for the authentication response before storing the token and updating the screen.</p>
+      </article>
+
+      <article class="item">
+        <h3>17. How do you handle API loading and error states?</h3>
+        <p>Set a loading state before a request, use <code>try-catch</code> for success and failure, and use <code>finally</code> to stop the loader. Error states should show a clear user message and, where possible, a retry option.</p>
+        <span class="label">FarmLink example</span>
+        <p><code>isLoggingIn</code> disables the Login button while the request is in progress. API errors are caught and shown as toast notifications. Product and dashboard loading fall back to demo data when services are unavailable.</p>
+      </article>
+
+      <article class="item">
+        <h3>18. What is localStorage? What are its limitations?</h3>
+        <p>localStorage stores string data in the browser and persists it after refresh or browser restart. It is synchronous, is accessible to JavaScript on the page, has limited capacity, and should not be used for highly sensitive data without considering XSS risk.</p>
+        <span class="label">FarmLink example</span>
+        <p>FarmLink stores the token, email, and buyer enquiry drafts in localStorage. For a hardened production system, token storage should be reviewed and the application must protect against XSS.</p>
+      </article>
+
+      <article class="item">
+        <h3>19. What is CORS?</h3>
+        <p>Cross-Origin Resource Sharing is a browser security mechanism that controls whether a web application from one origin may call an API on another origin. The backend must allow trusted frontend origins.</p>
+        <span class="label">FarmLink example</span>
+        <p>During development, Vite proxy forwards API requests to Auth, Product, and Inventory services. This avoids direct browser cross-origin calls locally. In production, Spring Boot must configure allowed origins correctly.</p>
+      </article>
+
+      <h2>Frontend Quality, Performance, and Accessibility</h2>
+
+      <article class="item">
+        <h3>20. How do you improve React application performance?</h3>
+        <p>Common approaches are reducing unnecessary renders, memoizing only when necessary, pagination or virtualization for long lists, image optimization, code splitting, caching server data, and avoiding repeated network calls.</p>
+        <span class="label">FarmLink example</span>
+        <p>For a large marketplace, I would add server-side pagination and replace one inventory request per product with a bulk inventory endpoint. Images should be optimized and lazy-loaded.</p>
+      </article>
+
+      <article class="item">
+        <h3>21. What is the N+1 request problem in frontend applications?</h3>
+        <p>It occurs when an application fetches one main list and then makes one additional request for every list item. It increases network latency and server load as the list grows.</p>
+        <span class="label">FarmLink example</span>
+        <p>FarmLink first loads products and then, for authenticated users, fetches inventory for each product. A bulk endpoint that receives all product IDs would be more scalable.</p>
+      </article>
+
+      <article class="item">
+        <h3>22. What is accessibility in frontend development?</h3>
+        <p>Accessibility means building applications that can be used by people with disabilities, including keyboard-only users and screen-reader users. Use semantic HTML, labels, meaningful alt text, sufficient color contrast, visible focus, and keyboard-accessible controls.</p>
+        <span class="label">FarmLink example</span>
+        <p>The login and product forms use <code>label</code> elements, and product images have descriptive <code>alt</code> text. I would further improve modal focus trapping, Escape-to-close support, and screen-reader announcements for toast messages.</p>
+      </article>
+
+      <article class="item">
+        <h3>23. What is responsive design?</h3>
+        <p>Responsive design makes a UI adapt to different screen sizes using flexible layouts, media queries, fluid sizing, and mobile-friendly interaction patterns.</p>
+        <span class="label">FarmLink example</span>
+        <p>The project CSS includes a mobile breakpoint that reduces page padding and heading size. A full responsive implementation should also test navigation, product grids, forms, and tables across mobile, tablet, and desktop screens.</p>
+      </article>
+
+      <article class="item">
+        <h3>24. How would you test a React application?</h3>
+        <p>Use unit tests for utility functions, component tests for user interactions and rendered states, integration tests for API workflows, and end-to-end tests for critical user journeys. Mock APIs in component tests and run real flows in E2E tests.</p>
+        <span class="label">FarmLink example</span>
+        <p>I would test login success and failure, FARMER-only create access, filtering product listings, showing controls only for the product owner, and saving/clearing buyer enquiry drafts.</p>
+      </article>
+
+      <article class="item">
+        <h3>25. What are good frontend security practices?</h3>
+        <p>Validate user input on both client and server, escape or safely render untrusted content, avoid dangerously setting raw HTML, use HTTPS, protect tokens, configure CORS narrowly, and enforce authorization on the backend.</p>
+        <span class="label">FarmLink example</span>
+        <p>FarmLink validates required fields in the product form and sends a Bearer token to protected APIs. The backend must still validate every input and verify that the farmer owns a product before updates or deletion.</p>
+      </article>
+
+      <section class="tip">
+        <h3>Interview answer pattern</h3>
+        <p>For each technical question, answer in three parts: <strong>definition</strong>, <strong>why it matters</strong>, and <strong>a short example</strong>. This makes your answer clear and shows you can apply the concept in a real application.</p>
+      </section>
+    </main>
+  </body>
+</html>

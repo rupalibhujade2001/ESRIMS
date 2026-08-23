@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FarmLink Interview Preparation</title>
+    <style>
+      :root { --green: #176b46; --ink: #1f2933; --muted: #52606d; --line: #d9e2ec; --soft: #f0f8f3; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #f7f9fb; color: var(--ink); font: 16px/1.6 Arial, sans-serif; }
+      main { max-width: 980px; margin: 32px auto; padding: 44px; background: #fff; box-shadow: 0 3px 18px #102a4317; }
+      h1, h2, h3 { color: var(--green); line-height: 1.2; }
+      h1 { margin: 0 0 8px; font-size: 2.25rem; }
+      h2 { margin-top: 42px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
+      h3 { margin: 0 0 10px; font-size: 1.08rem; }
+      .subtitle, .note { color: var(--muted); }
+      .intro { padding: 22px; border-left: 5px solid var(--green); background: var(--soft); }
+      .question { margin: 20px 0; padding: 20px; border: 1px solid var(--line); border-radius: 8px; break-inside: avoid; }
+      .answer { margin: 0; }
+      code { padding: 2px 5px; background: #eef2f5; border-radius: 4px; color: #0f5132; }
+      table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+      th, td { padding: 10px; border: 1px solid var(--line); text-align: left; }
+      th { background: var(--soft); color: var(--green); }
+      ul { margin: 8px 0; }
+      .closing { padding: 18px; background: #fff8df; border-radius: 8px; }
+      @media print { body { background: #fff; } main { max-width: none; margin: 0; padding: 20px; box-shadow: none; } }
+      @media (max-width: 650px) { main { margin: 0; padding: 22px; } h1 { font-size: 1.75rem; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>FarmLink Interview Preparation</h1>
+      <p class="subtitle">Java Full Stack Developer &mdash; 2 years of experience</p>
+
+      <section class="intro">
+        <strong>Project summary:</strong> FarmLink is a B2B agricultural wholesale marketplace. Farmers create and manage bulk-produce listings, while buyers browse available products and save enquiry drafts. The React frontend connects to Auth, Product, and Inventory services designed with Java Spring Boot microservices.
+      </section>
+
+      <h2>Project Overview</h2>
+
+      <article class="question">
+        <h3>1. Explain your project.</h3>
+        <p class="answer">FarmLink connects farmers directly with wholesale buyers such as retailers, hotels, and processors. Farmers can log in and create, update, or delete bulk produce listings. Buyers can browse products, view available stock, and save enquiry drafts. The frontend is built with React and Vite. The backend architecture uses Spring Boot services for authentication, products, and inventory.</p>
+      </article>
+
+      <article class="question">
+        <h3>2. What technologies did you use?</h3>
+        <p class="answer">The frontend uses React 19, JavaScript, Vite, CSS, Fetch API, and browser localStorage. The backend architecture uses Java, Spring Boot REST APIs, JWT-based authentication, and Kafka-based asynchronous communication for inventory-related events.</p>
+      </article>
+
+      <article class="question">
+        <h3>3. Explain the frontend architecture.</h3>
+        <p class="answer"><code>App.jsx</code> coordinates the application state, navigation, authentication token, products, dashboard data, notifications, and modal visibility. UI is split into feature-focused components such as <code>Marketplace</code>, <code>LoginModal</code>, <code>ProductForm</code>, <code>SellerDashboard</code>, and <code>Inventory</code>. API calls are centralized in <code>src/services/api.js</code>.</p>
+      </article>
+
+      <article class="question">
+        <h3>4. What are the main user roles?</h3>
+        <p class="answer">The current UI supports FARMER and ADMIN login roles. The application also provides a buyer workspace view. Farmers can manage their own product listings, while buyers can browse listings and save enquiry drafts.</p>
+      </article>
+
+      <h2>Authentication and Security</h2>
+
+      <article class="question">
+        <h3>5. How does authentication work?</h3>
+        <p class="answer">The frontend sends credentials to <code>POST /auth/login</code>. On success, it receives a token, email, and role. The token and email are stored in localStorage. Protected requests send the token through the header <code>Authorization: Bearer &lt;token&gt;</code>. On logout, the application removes those localStorage values and resets protected UI data.</p>
+      </article>
+
+      <article class="question">
+        <h3>6. What is JWT, and why is it useful?</h3>
+        <p class="answer">JWT is a signed token used to identify an authenticated user. After login, the client attaches it to protected API requests. It works well with microservices because services can validate the token without maintaining traditional server-side sessions.</p>
+      </article>
+
+      <article class="question">
+        <h3>7. How do you implement role-based access?</h3>
+        <p class="answer">The frontend checks the role before allowing a product listing to be created. Only a FARMER can open the product form. It also shows Edit and Delete only when the logged-in email matches the listing owner. However, this is only a UI check; Spring Security must enforce authorization and ownership on the backend.</p>
+      </article>
+
+      <article class="question">
+        <h3>8. How would you improve token security in production?</h3>
+        <p class="answer">I would use short-lived access tokens, refresh tokens, HTTPS, secure HTTP-only cookies where appropriate, token expiration handling, and centralized validation through Spring Security or an API gateway. Passwords must be hashed using BCrypt.</p>
+      </article>
+
+      <h2>API and Integration</h2>
+
+      <table>
+        <thead><tr><th>Feature</th><th>Endpoint</th></tr></thead>
+        <tbody>
+          <tr><td>Login</td><td><code>POST /auth/login</code></td></tr>
+          <tr><td>Get products</td><td><code>GET /products</code></td></tr>
+          <tr><td>Create product</td><td><code>POST /products/createProduct</code></td></tr>
+          <tr><td>Update product</td><td><code>PUT /products/{productId}</code></td></tr>
+          <tr><td>Delete product</td><td><code>DELETE /products/{productId}</code></td></tr>
+          <tr><td>Inventory dashboard</td><td><code>GET /inventory/dashboard</code></td></tr>
+          <tr><td>Product inventory</td><td><code>GET /inventory/{productId}</code></td></tr>
+        </tbody>
+      </table>
+
+      <article class="question">
+        <h3>9. Why did you create a separate API service file?</h3>
+        <p class="answer">Centralizing API calls in <code>api.js</code> avoids repeated Fetch configuration in UI components. It makes the code easier to maintain, gives common error handling, and keeps components focused on rendering and user interaction.</p>
+      </article>
+
+      <article class="question">
+        <h3>10. How do you handle API errors?</h3>
+        <p class="answer">The reusable request function checks <code>response.ok</code>. If the response is unsuccessful, it reads a backend message when available and throws an error. Components use <code>try-catch-finally</code> to display a toast message and to reset loading state. Initial product and dashboard requests fall back to mock data if services are unavailable.</p>
+      </article>
+
+      <article class="question">
+        <h3>11. Why is Vite proxy configured?</h3>
+        <p class="answer">During local development, Vite proxies <code>/auth-api</code>, <code>/product-api</code>, and <code>/inventory-api</code> to Spring Boot services on ports 8081, 8083, and 8084. This keeps frontend URLs clean and avoids CORS problems during development.</p>
+      </article>
+
+      <h2>React and Frontend Questions</h2>
+
+      <article class="question">
+        <h3>12. Why did you use useEffect?</h3>
+        <p class="answer">I use <code>useEffect</code> to load products and dashboard data when the authentication token changes. It keeps asynchronous API side effects outside the render process and refreshes data after login.</p>
+      </article>
+
+      <article class="question">
+        <h3>13. Why did you use useMemo for product search?</h3>
+        <p class="answer">The marketplace derives visible products by filtering on product name and category. <code>useMemo</code> recalculates this list only when the product array or search input changes, rather than on unrelated renders.</p>
+      </article>
+
+      <article class="question">
+        <h3>14. How does product create and update work?</h3>
+        <p class="answer">The same <code>ProductForm</code> is reused. If an editing product exists, the app calls the update endpoint using its ID; otherwise it calls the create endpoint. Form values such as price and quantity are converted to numbers before sending to the API. After a successful save, the product list is reloaded.</p>
+      </article>
+
+      <article class="question">
+        <h3>15. What is the purpose of mock data?</h3>
+        <p class="answer">Mock products and dashboard values let us develop and demonstrate the UI even when backend services are unavailable. When a live API succeeds, live data replaces the mock data.</p>
+      </article>
+
+      <article class="question">
+        <h3>16. What is a limitation in the current inventory loading approach?</h3>
+        <p class="answer">The app requests inventory separately for every product after login. With a large catalog, this causes the N+1 API-call problem. I would improve it with a bulk inventory endpoint, pagination, caching, or an API response that combines product and stock summaries.</p>
+      </article>
+
+      <h2>Java, Spring Boot, and Microservices</h2>
+
+      <article class="question">
+        <h3>17. Explain the microservice design.</h3>
+        <p class="answer">Auth Service handles login and JWT generation. Product Service manages product CRUD operations. Inventory Service manages available quantity, reserved quantity, low-stock items, and dashboard analytics. Separating these services allows independent deployment and scaling based on workload.</p>
+      </article>
+
+      <article class="question">
+        <h3>18. How does Kafka fit into FarmLink?</h3>
+        <p class="answer">When a farmer creates a product, Product Service can publish a product-created event to Kafka. Inventory Service consumes it and creates the initial inventory record asynchronously. This reduces direct coupling between the two services and improves resilience.</p>
+      </article>
+
+      <article class="question">
+        <h3>19. What Kafka issues should you handle?</h3>
+        <p class="answer">Important concerns are duplicate messages, retries, consumer failure, ordering, and eventual consistency. Consumers should be idempotent, events should have unique IDs, retries and dead-letter queues should be configured, and event processing should be monitored.</p>
+      </article>
+
+      <article class="question">
+        <h3>20. What validations would you apply in Spring Boot?</h3>
+        <p class="answer">I would validate request DTOs using Bean Validation: <code>@NotBlank</code> for product name, <code>@NotNull</code> and <code>@Positive</code> for price and quantity, <code>@Email</code> for email, and appropriate size constraints for text fields. A <code>@RestControllerAdvice</code> can return a consistent validation error response.</p>
+      </article>
+
+      <article class="question">
+        <h3>21. How would you prevent overselling?</h3>
+        <p class="answer">Inventory Service should reserve stock inside a database transaction. It should reduce available stock only when sufficient quantity exists. Optimistic locking with a version field, or suitable database-level locking, prevents two buyers from reserving the same stock at the same time.</p>
+      </article>
+
+      <article class="question">
+        <h3>22. Which entities would the backend have?</h3>
+        <p class="answer">Core entities are User, Product, Inventory, Enquiry, and Order. User stores email, password hash, and role. Product stores farmer ownership and listing details. Inventory stores available and reserved quantities. Enquiry and Order would support the buyer-to-seller purchasing workflow.</p>
+      </article>
+
+      <h2>Honest Current Scope and Future Improvements</h2>
+
+      <article class="question">
+        <h3>23. Why are buyer enquiries stored in localStorage?</h3>
+        <p class="answer">The current enquiry flow is a browser-only draft feature because an Enquiry or Order Service endpoint is not yet connected. localStorage preserves these drafts after page refresh. The next enhancement is to persist enquiries in a backend database and let sellers respond to them.</p>
+      </article>
+
+      <article class="question">
+        <h3>24. What would you improve next?</h3>
+        <p class="answer">I would add real Enquiry and Order services, a bulk inventory API, pagination and server-side search, inventory update functionality, automated tests, TypeScript, React Query for server-state caching, refresh-token support, and accessibility improvements.</p>
+      </article>
+
+      <section class="closing">
+        <h3>Strong answer: What was your contribution?</h3>
+        <p>I worked on the application integration layer and frontend workflow: reusable React components, login integration, JWT handling, protected product operations, product search, seller ownership UI checks, inventory dashboard rendering, buyer enquiry drafts, centralized API handling, and fallback UI states for unavailable backend services.</p>
+      </section>
+
+      <p class="note"><strong>Interview tip:</strong> Be transparent. Say that order/enquiry persistence and inventory-update screens are planned enhancements, while clearly explaining the architecture and how you would implement them.</p>
+    </main>
+  </body>
+</html>

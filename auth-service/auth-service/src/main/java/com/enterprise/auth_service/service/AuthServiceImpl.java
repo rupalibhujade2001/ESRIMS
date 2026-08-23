@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
 		user.setUserName(reuqest.getUsername());
 		user.setEmail(reuqest.getEmail());
 		user.setPassowrd(passwordEncoder.encode(reuqest.getPassword()));
-		user.setRole(Role.FARMER);
+		user.setRole(reuqest.getRole());
 		user.setFarmerName(reuqest.getFarmerName());
 		user.setPhone(reuqest.getPhone());
 

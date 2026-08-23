@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -28,6 +27,7 @@ import com.crop.inventory_service.dto.InverntoryResponse;
 import com.crop.inventory_service.dto.ProductResponse;
 import com.crop.inventory_service.dto.StockUpdateRequest;
 import com.crop.inventory_service.entity.Inventory;
+import com.crop.inventory_service.kafka.event.ProductCreatedEvent;
 import com.crop.inventory_service.repository.InventoryRepository;
 import com.crop.inventory_service.security.securityUtils.JwtUtils;
 import com.crop.inventory_service.service.InventoryDashboardService;
@@ -44,10 +44,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class InventoryServiceImpl implements InventoryService {
 
 	@Autowired
@@ -61,23 +63,31 @@ public class InventoryServiceImpl implements InventoryService {
 	@Autowired
 	private InventoryDashboardService inventoryDashboardService;
 
-	@CacheEvict(value = CacheConstants.INVENTORY_SUMMARY, allEntries = true)
+	@CacheEvict(value = { CacheConstants.INVENTORY_SUMMARY, CacheConstants.INVENTORY_DASHBOARD }, allEntries = true)
 	@Override
 	public InverntoryResponse createInventory(InventoryRequest request) throws InventoryException {
 
 		if (request.Quantity() <= 0) {
 			throw new InventoryException("Quantity must be greater than zero.", HttpStatus.BAD_REQUEST);
 		}
-		Inventory inventory = Inventory.builder().AvailableQuantity(request.Quantity()).productId(request.productId())
-				.updatedAt(LocalDateTime.now()).reserverdQuantity(0L).build();
+	
 		try {
-			Inventory response = inventoryRepository.save(inventory);
+			Inventory response = saveInventory(request.productId(),request.Quantity());
 			return (MapToResponse(response));
 		} catch (Exception e) {
 			throw new InventoryException(e.getMessage());
 
 		}
 
+	}
+
+	private Inventory saveInventory(Long productId, Long quantity) {
+		Inventory invenotry= Inventory.builder().AvailableQuantity(quantity).productId(productId)
+				.updatedAt(LocalDateTime.now()).reserverdQuantity(0L).build();
+		return inventoryRepository.save(invenotry);
+		
+		
+		
 	}
 
 	private InverntoryResponse MapToResponse(Inventory response) {
@@ -95,7 +105,7 @@ public class InventoryServiceImpl implements InventoryService {
 		return MapToResponse(inventory);
 	}
 
-	@CacheEvict(value = CacheConstants.INVENTORY_SUMMARY, allEntries = true)
+	@CacheEvict(value = { CacheConstants.INVENTORY_SUMMARY, CacheConstants.INVENTORY_DASHBOARD }, allEntries = true)
 	@Override
 	public InverntoryResponse addStock(Long productId, StockUpdateRequest Quantity) throws InventoryException {
 		Inventory inventory = inventoryRepository.findByProductId(productId)
@@ -108,7 +118,7 @@ public class InventoryServiceImpl implements InventoryService {
 		return MapToResponse(savedInventory);
 	}
 
-	@CacheEvict(value = CacheConstants.INVENTORY_SUMMARY, allEntries = true)
+	@CacheEvict(value = { CacheConstants.INVENTORY_SUMMARY, CacheConstants.INVENTORY_DASHBOARD }, allEntries = true)
 	@Override
 	public InverntoryResponse reduceStock(Long productId, StockUpdateRequest Quantity) throws InventoryException {
 		Inventory inventory = inventoryRepository.findByProductId(productId)
@@ -129,12 +139,7 @@ public class InventoryServiceImpl implements InventoryService {
 	public InvenotoryDashBoardResponse getDashboard() {
 
 		String user = jwtUtils.getLoggedInUser();
-		List<String> role = jwtUtils.getLoggedInUSerRole();
-		ResponseEntity<List<ProductResponse>> ids = productClient.getProductIdsByEmail(user);
-		List<Long> totalProducts = ids.getBody().stream().map(ProductResponse::id).toList();
-
-		System.out.println("Cockroaches your product have been arrived.");
-		return null;
+		return inventoryDashboardService.getDashboard(user);
 	}
 
 	@Override
@@ -186,6 +191,21 @@ public class InventoryServiceImpl implements InventoryService {
 	            .AvailableQUantity(inventory.getAvailableQuantity())
 	            .reservedQuantity(inventory.getReserverdQuantity())
 	            .build();
+	}
+
+	@Override
+	@CacheEvict(value = { CacheConstants.INVENTORY_SUMMARY, CacheConstants.INVENTORY_DASHBOARD }, allEntries = true)
+	public void createInventoryForProduct(ProductCreatedEvent event) {
+		
+		if(inventoryRepository.existsByProductId(event.getProductId()))
+		{
+			log.info("Product already exists {}",event.getProductId());
+			return;
+		}
+		saveInventory(event.getProductId(),event.getAvailableQuantity());
+		
+		log.info("Inventory automatically created for product {}",
+	            event.getProductId());
 	}
 
 }

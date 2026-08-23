@@ -18,4 +18,5 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long>, JpaS
 	List<Inventory> findByProductIdIn(List<Long> productIds);
 	List<Inventory> getByProductIdIn(List<Long> body);
 	//<Pageable> Page<Inventory> findAll(Pageable pageable);
+	boolean existsByProductId(Long productId);
 }

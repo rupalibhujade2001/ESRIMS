@@ -1,0 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap');
+
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; font-family: 'DM Sans', Arial, sans-serif; }
+#root { min-height: 100vh; }
